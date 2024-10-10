@@ -111,8 +111,9 @@
     
         // Заповнення форми даними користувача при завантаженні сторінки
         window.onload = function() {
-            let userData = JSON.parse(getUrlParameter('user'));
-            if (userData) {
+            let encodedUserData = getUrlParameter('user');
+            if (encodedUserData) {
+                let userData = JSON.parse(decodeURIComponent(encodedUserData));
                 document.getElementById("user_name").value = (userData.first_name || '') + ' ' + (userData.last_name || '');
             }
         }
