@@ -100,34 +100,53 @@
         let order = document.getElementById("order");
         
         tg.expand();
-
+    
+        // Функція для отримання параметрів з URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+    
+        // Заповнення форми даними користувача при завантаженні сторінки
+        window.onload = function() {
+            let userData = JSON.parse(getUrlParameter('user'));
+            if (userData) {
+                document.getElementById("user_name").value = (userData.first_name || '') + ' ' + (userData.last_name || '');
+            }
+        }
+    
         buy.addEventListener("click", () => {
             document.getElementById("main").style.display = "none";
             document.getElementById("form").style.display = "block";
-            document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name + " " + tg.initDataUnsafe.user.last_name;
+            // Якщо ім'я ще не заповнене з URL, заповнюємо його з tg.initDataUnsafe
+            if (!document.getElementById("user_name").value) {
+                document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name + " " + tg.initDataUnsafe.user.last_name;
+            }
         });
-
+    
         order.addEventListener("click", () => {
             document.getElementById("error").innerText = '';
             let name = document.getElementById("user_name").value;
             let email = document.getElementById("user_email").value;
             let phone = document.getElementById("user_phone").value;
-
+    
             if(name.length < 5) {
                 document.getElementById("error").innerText = 'Помилка в імені';
                 return;
             }
-
+    
             if(email.length < 5) {
                 document.getElementById("error").innerText = 'Помилка в email';
                 return;
             }
-
+    
             if(phone.length < 5) {
                 document.getElementById("error").innerText = 'Помилка в номері телефону';
                 return;
             }
-
+    
             let data = {
                 name: name,
                 email: email,
