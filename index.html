@@ -83,7 +83,7 @@
     <div id="main">
         <h1>Онлайн магазин</h1>
         <img src="https://cdn-icons-png.flaticon.com/512/3595/3595455.png">
-        <p>Тут ти придбаєш найзручніший єлдак на планеті.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ipsum magni, molestias.</p>
         <button id="buy">Купити</button>
     </div>
     <form id="form">
@@ -91,30 +91,43 @@
         <input type="text" placeholder="Email" id="user_email">
         <input type="text" placeholder="Телефон" id="user_phone">
         <button id="order">Оформити</button>
+        <p id="error" style="color: red;"></p>
     </form>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         let tg = window.Telegram.WebApp;
         let buy = document.getElementById("buy");
         let order = document.getElementById("order");
-        let form = document.getElementById("form");
-    
+        
+        tg.expand();
+
         buy.addEventListener("click", () => {
             document.getElementById("main").style.display = "none";
-            form.style.display = "block";
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                document.getElementById("user_name").value = 
-                    (tg.initDataUnsafe.user.first_name || '') + ' ' + 
-                    (tg.initDataUnsafe.user.last_name || '');
-                document.getElementById("user_phone").value = tg.initDataUnsafe.user.phone_number || '';
-            }
+            document.getElementById("form").style.display = "block";
+            document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name + " " + tg.initDataUnsafe.user.last_name;
         });
-    
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
+
+        order.addEventListener("click", () => {
+            document.getElementById("error").innerText = '';
             let name = document.getElementById("user_name").value;
             let email = document.getElementById("user_email").value;
             let phone = document.getElementById("user_phone").value;
+
+            if(name.length < 5) {
+                document.getElementById("error").innerText = 'Помилка в імені';
+                return;
+            }
+
+            if(email.length < 5) {
+                document.getElementById("error").innerText = 'Помилка в email';
+                return;
+            }
+
+            if(phone.length < 5) {
+                document.getElementById("error").innerText = 'Помилка в номері телефону';
+                return;
+            }
+
             let data = {
                 name: name,
                 email: email,
